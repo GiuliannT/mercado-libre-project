@@ -4,6 +4,7 @@ import { HomeScreen } from "./pages/HomeScreen";
 import { ErrorScreen } from "./pages/ErrorScreen";
 import { Footer } from "./components/Footer";
 import { ProductsScreen } from "./pages/ProductsScreen";
+import { ProductSelectedScreen } from "./pages/ProductSelectedScreen";
 
 export const App = () => {
   return (
@@ -12,7 +13,8 @@ export const App = () => {
         <Navbar />
         <Routes>
           <Route path="/" element={<HomeScreen />} />
-          <Route path="/buscar/productos/:productoId" element={<ProductsScreen />} />
+          <Route path="/buscar/productos/:productosId" element={<ProductsScreen />} />
+          <Route path="/producto/:productoId" element={<ProductSelectedScreen />} />
           <Route path="*" element={<ErrorScreen message="Error 404" />} />
         </Routes>
       </BrowserRouter>
