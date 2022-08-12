@@ -17,7 +17,7 @@ export const ProductSelectedScreen = () => {
 
   useEffect(() => {
     if (data) {
-      document.title = `${data.title} | MercadoLibre`;
+      document.title = `${data.title} | MercadoLibre 📦`;
       setShowThisImg(data.pictures[0].url);
     }
   }, [data]);
@@ -28,7 +28,7 @@ export const ProductSelectedScreen = () => {
 
   return (
     <div>
-      <div className="flex bg-grayProducts">
+      <div className="flex bg-grayProducts min-h-screen">
         <div className="flex flex-col w-full p-4 max-w-7xl mx-auto mt-6 rounded shadow bg-white">
           <p className="text-xs mb-2 text-gray-400 lg:hidden">
             {data.condition === "new" ? "Nuevo" : "Usado"} | {data.sold_quantity} vendidos

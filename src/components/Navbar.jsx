@@ -51,7 +51,9 @@ export const Navbar = () => {
             </button>
           </div>
 
-          <div className="hidden lg:flex w-[340px] bg-green-200">hola</div>
+          <div className="hidden lg:flex w-[340px] cursor-pointer bg-green-200">
+            <img src="https://http2.mlstatic.com/D_NQ_887100-MLA50801817839_072022-OO.webp" alt="logoDisney" />
+          </div>
         </section>
         <section className="flex justify-between border-t">
           <div>direc</div>
