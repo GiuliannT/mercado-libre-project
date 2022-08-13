@@ -5,10 +5,17 @@ import iconSearch from "../assets/iconSearch.svg";
 import iconMenu from "../assets/iconMenu.svg";
 import iconCart from "../assets/iconCart.svg";
 import { useRef } from "react";
+import { useEffect } from "react";
 
 export const Navbar = () => {
   const navigate = useNavigate();
   const inputRef = useRef();
+
+  useEffect(() => {
+    if (window.location.pathname.split("/")[3] !== undefined) {
+      inputRef.current.value = window.location.pathname.split("/")[3].split("&")[0];
+    }
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -51,8 +58,12 @@ export const Navbar = () => {
             </button>
           </div>
 
-          <div className="hidden lg:flex w-[340px] cursor-pointer bg-green-200">
-            <img src="https://http2.mlstatic.com/D_NQ_887100-MLA50801817839_072022-OO.webp" alt="logoDisney" />
+          <div className="hidden lg:flex w-[340px] cursor-pointer">
+            <img
+              className="object-contain"
+              src="https://http2.mlstatic.com/D_NQ_887100-MLA50801817839_072022-OO.webp"
+              alt="logoDisney"
+            />
           </div>
         </section>
         <section className="flex justify-between border-t">

@@ -16,7 +16,11 @@ export const ProductsScreen = () => {
   const [allRefs, setAllRefs] = useState(useRef([]));
 
   useEffect(() => {
-    document.title = `${productosId[0].toUpperCase() + productosId.slice(1)} | MercadoLibre 📦`;
+    if (productosId.includes("&")) {
+      document.title = `${productosId[0].toUpperCase() + productosId.split("&")[0].slice(1)} | MercadoLibre 📦`;
+    } else {
+      document.title = `${productosId[0].toUpperCase() + productosId.slice(1)} | MercadoLibre 📦`;
+    }
     const fetchData = async () => {
       setData(null);
       setLoading(true);
@@ -84,6 +88,18 @@ export const ProductsScreen = () => {
     return `${productosId}&${item.id}=${removePointZero}`;
   };
 
+  const prevImage = (productId) => {
+    if (allRefs[productId].current.scrollLeft % 284 === 0) {
+      allRefs[productId].current.scrollLeft -= 284;
+    }
+  };
+
+  const nextImage = (productId) => {
+    if (allRefs[productId].current.scrollLeft % 284 === 0) {
+      allRefs[productId].current.scrollLeft += 284;
+    }
+  };
+
   const asd = () => {
     let a = [1, 2, 3, 4, 5];
     a.unshift(a[a.length - 1]);
@@ -105,13 +121,16 @@ export const ProductsScreen = () => {
         <div className="flex justify-center">
           <div className="hidden w-[278px] p-2 lg:block">
             <p className="text-2xl font-bold">{data?.query}</p>
-            <p className="text-sm mb-6">{data?.results?.length} resultados</p>
-            <div>
+            <p className="text-sm mb-6">{data?.paging?.total} resultados</p>
+            <div className="flex mb-6">
               {data?.filters?.map((filter) => {
-                if ("category" === filter.id) return null;
+                if (!productosId.includes(filter.id)) return null;
                 return (
-                  <Link className="flex" key={filter.id} to={`/buscar/productos/${removeFilter(filter)}`}>
-                    <p className="bg-white">{filter.name}</p>
+                  <Link className="flex mb-2 mr-2" key={filter.id} to={`/buscar/productos/${removeFilter(filter)}`}>
+                    <p className="text-xs pl-2 pr-1 py-1 bg-white text-[rgb(102,102,102)]">
+                      {filter.name}
+                      <span className="px-2 py-0.5 text-[rgb(180,180,180)] hover:text-[rgb(102,102,102)]">X</span>
+                    </p>
                   </Link>
                 );
               })}
@@ -119,14 +138,17 @@ export const ProductsScreen = () => {
             <div className="">
               {data?.available_filters?.map((item) => (
                 <div className="flex flex-col mb-6" key={item.id}>
-                  <h3 className="flex text-sm font-bold mb-1">{item.name}: </h3>
+                  <h3 className="flex text-sm font-semibold mb-1 text-[rgb(51,51,51)]">{item.name}: </h3>
                   {item.values.map((value, i) => {
                     if (i > 8) return null;
                     return (
                       <div key={value.id}>
-                        <Link className="text-sm mb-0.5" to={`/buscar/productos/${setFilter(item, value)}`}>
+                        <Link
+                          className="text-sm mb-0.5 text-[rgb(102,102,102)]"
+                          to={`/buscar/productos/${setFilter(item, value)}`}
+                        >
                           {value.name}
-                          <span className="ml-2 text-gray-500">({value.results})</span>
+                          <span className="ml-2 text-[rgb(140,140,140)]">({value.results})</span>
                         </Link>
                       </div>
                     );
@@ -183,21 +205,13 @@ export const ProductsScreen = () => {
                     <>
                       <button
                         className="absolute bg-yellowML top-[120px] left-4 p-1 rounded-full z-20"
-                        onClick={() => {
-                          if (allRefs[product.id].current.scrollLeft % 284 === 0) {
-                            allRefs[product.id].current.scrollLeft -= 284;
-                          }
-                        }}
+                        onClick={() => prevImage(product.id)}
                       >
                         <img className="w-[24px] h-[24px]" src={prev} alt="prev" />
                       </button>
                       <button
                         className="absolute bg-yellowML top-[120px] right-4 p-1 rounded-full z-20"
-                        onClick={() => {
-                          if (allRefs[product.id].current.scrollLeft % 284 === 0) {
-                            allRefs[product.id].current.scrollLeft += 284;
-                          }
-                        }}
+                        onClick={() => nextImage(product.id)}
                       >
                         <img className="w-[24px] h-[24px]" src={next} alt="next" />
                       </button>
@@ -206,7 +220,6 @@ export const ProductsScreen = () => {
                 </div>
               );
             })}
-            <button onClick={() => console.log("asd")}>clg</button>
           </div>
         </div>
       </div>
