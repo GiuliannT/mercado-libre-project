@@ -52,7 +52,6 @@ export const ProductsScreen = () => {
       fetch(`https://api.mercadolibre.com/items/${productId}`)
         .then((res) => res.json())
         .then((info) => {
-          console.log(info.pictures);
           let a = productId;
           let b = info.pictures;
           dataPicturesTemporary[a] = b;
@@ -75,22 +74,20 @@ export const ProductsScreen = () => {
   };
 
   const setFilter = (item, value) => {
-    if (productosId.includes(item.id)) {
+    const removePointZero = value.id.replace(/\.0/g, "");
+    if (productosId.includes(item.id + "=")) {
       return productosId.replace(
         `&${item.id}=` + productosId.split(`${item.id}=`)[1].split("&")[0],
-        `&${item.id}=${value.id}`
+        `&${item.id}=${removePointZero}`
       );
     }
-    return `${productosId}&${item.id}=${value.id}`;
+    return `${productosId}&${item.id}=${removePointZero}`;
   };
 
   const asd = () => {
     let a = [1, 2, 3, 4, 5];
     a.unshift(a[a.length - 1]);
     a = a.slice(0, a.length - 1);
-    /* console.log(a);
-    console.log(dataPictures); */
-    console.log(Object.keys(dataPictures).length);
   };
 
   const asdsa = {
@@ -140,7 +137,6 @@ export const ProductsScreen = () => {
           </div>
           <div className="flex flex-wrap justify-center max-w-[900px]">
             {data?.results?.map((product) => {
-              console.log("product");
               return (
                 <div
                   className="relative flex flex-col w-1/2 border lg:border-0 lg:w-[284px] lg:h-auto lg:m-2 lg:rounded lg:shadow lg:transition-shadow lg:hover:shadow-2xl bg-white"
@@ -151,7 +147,7 @@ export const ProductsScreen = () => {
                     to={`/producto/${product.id}`}
                     onMouseEnter={() => getThesePictures(product.id)}
                   >
-                    <div className="flex flex-col justify-center w-[284px] h-[285px] border-b mx-auto">
+                    <div className="flex flex-col justify-center w-full lg:w-[284px] lg:h-[285px] lg:border-b mx-auto">
                       <div
                         className="flex w-full whitespace-nowrap overflow-x-hidden scroll-slow rounded-t z-10"
                         ref={allRefs[product.id]}
@@ -168,7 +164,7 @@ export const ProductsScreen = () => {
                             ))
                           ) : (
                             <img
-                              className="w-[25vw] max-w-full object-contain rounded-t mx-auto"
+                              className="w-full object-contain rounded-t mx-auto"
                               src={product.thumbnail}
                               alt={product.title}
                             />
@@ -186,16 +182,24 @@ export const ProductsScreen = () => {
                   {dataPictures[product.id]?.length > 1 && (
                     <>
                       <button
-                        className="absolute bg-blue-500 top-[120px] left-0 z-20"
-                        onClick={() => (allRefs[product.id].current.scrollLeft -= 284)}
+                        className="absolute bg-yellowML top-[120px] left-4 p-1 rounded-full z-20"
+                        onClick={() => {
+                          if (allRefs[product.id].current.scrollLeft % 284 === 0) {
+                            allRefs[product.id].current.scrollLeft -= 284;
+                          }
+                        }}
                       >
-                        <img className="w-[24px] h-[24px] ml-4" src={prev} alt="prev" />
+                        <img className="w-[24px] h-[24px]" src={prev} alt="prev" />
                       </button>
                       <button
-                        className="absolute bg-red-500 top-[120px] right-0 z-20"
-                        onClick={() => (allRefs[product.id].current.scrollLeft += 284)}
+                        className="absolute bg-yellowML top-[120px] right-4 p-1 rounded-full z-20"
+                        onClick={() => {
+                          if (allRefs[product.id].current.scrollLeft % 284 === 0) {
+                            allRefs[product.id].current.scrollLeft += 284;
+                          }
+                        }}
                       >
-                        <img className="w-[24px] h-[24px] mr-4" src={next} alt="next" />
+                        <img className="w-[24px] h-[24px]" src={next} alt="next" />
                       </button>
                     </>
                   )}
