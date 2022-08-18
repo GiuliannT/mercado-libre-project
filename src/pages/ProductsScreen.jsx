@@ -1,17 +1,17 @@
-import { createRef, useEffect, useState } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { LoadingScreen } from "./LoadingScreen";
 import next from "../assets/next.svg";
 import prev from "../assets/prev.svg";
 import { useRef } from "react";
+import { useFetch } from "../hooks/useFetch";
+import { ErrorScreen } from "./ErrorScreen";
 
 export const ProductsScreen = () => {
   const params = useParams();
   const { productosId } = params;
   const [dataPictures, setDataPictures] = useState([]);
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { data, loading, error } = useFetch(`https://api.mercadolibre.com/sites/MLA/search?q=${productosId}`);
 
   const [allRefs, setAllRefs] = useState(useRef([]));
 
@@ -21,21 +21,6 @@ export const ProductsScreen = () => {
     } else {
       document.title = `${productosId[0].toUpperCase() + productosId.slice(1)} | MercadoLibre 📦`;
     }
-    const fetchData = async () => {
-      setData(null);
-      setLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`https://api.mercadolibre.com/sites/MLA/search?q=${productosId}`);
-        const json = await response.json();
-        setData(json);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
   }, [productosId]);
 
   useEffect(() => {
@@ -106,11 +91,9 @@ export const ProductsScreen = () => {
     a = a.slice(0, a.length - 1);
   };
 
-  const asdsa = {
-    4421421: {},
-  };
-
   if (loading) return <LoadingScreen />;
+
+  if (!loading && data.results.length === 0) return <ErrorScreen message="No se encontraron resultados" />;
 
   if (error) return <ErrorScreen message={error.message} />;
   return (
@@ -161,7 +144,7 @@ export const ProductsScreen = () => {
             {data?.results?.map((product) => {
               return (
                 <div
-                  className="relative flex flex-col w-1/2 border lg:border-0 lg:w-[284px] lg:h-auto lg:m-2 lg:rounded lg:shadow lg:transition-shadow lg:hover:shadow-2xl bg-white"
+                  className="relative flex flex-col w-1/2 border lg:max-h-[500px] lg:border-0 lg:w-[284px] lg:h-auto lg:m-2 lg:rounded lg:shadow lg:transition-shadow lg:hover:shadow-2xl bg-white"
                   key={product.id}
                 >
                   <Link

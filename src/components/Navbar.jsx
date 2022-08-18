@@ -1,11 +1,10 @@
+import React, { useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import iconLogoSmall from "../assets/iconLogoSmall.png";
 import iconLogoLarge from "../assets/iconLogoLarge.png";
 import iconSearch from "../assets/iconSearch.svg";
 import iconMenu from "../assets/iconMenu.svg";
 import iconCart from "../assets/iconCart.svg";
-import { useRef } from "react";
-import { useEffect } from "react";
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -15,7 +14,7 @@ export const Navbar = () => {
     if (window.location.pathname.split("/")[3] !== undefined) {
       inputRef.current.value = window.location.pathname.split("/")[3].split("&")[0];
     }
-  }, []);
+  }, [window.location.pathname]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
